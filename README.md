@@ -107,43 +107,47 @@ Nếu khởi chạy thành công, terminal sẽ hiển thị địa chỉ đư�
 > **URL:** [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 ##  Kiến trúc kỹ thuật
 
-### Giao thức & Định dạng dữ liệu (Data Format & API)
+### Kiến trúc hệ thống
 
 ```text
-+-------------------+------------------------------------------+
-| HTTP Request Header| JSON Payload (Order Info, Design Metadata)|
-+-------------------+------------------------------------------+
+Client (Browser)
+       │
+       ▼
+ Django Framework
+       │
+       ▼
+ Business Logic
+       │
+       ▼
+ Django ORM
+       │
+       ▼
+ SQL Server / MySQL
 ```
 
-Sử dụng **RESTful API** kết hợp **Django REST Framework (DRF)** với định dạng dữ liệu **JSON** để xử lý giao tiếp giữa giao diện người dùng và backend.
-
-### Mô hình xử lý luồng công việc (Order Workflow Lifecycle)
-
-```text
-Khách hàng (Tạo yêu cầu / Đặt hàng)
-├── Sales Staff     <- Khai báo giá, báo giá vốn & xác nhận đơn hàng
-├── Design Staff    <- Xem yêu cầu, thiết kế bản vẽ 3D & tải lên hệ thống
-├── Production Staff<- Tiếp nhận, lập kế hoạch, kiểm tra vật liệu & gia công
-└── Admin / Manager <- Giám sát tiến độ, duyệt đơn hàng & tổng hợp báo cáo
-```
-
-Dữ liệu và tính toàn vẹn của đơn hàng được đảm bảo thông qua các giao dịch **Atomic Transaction** (`@transaction.atomic`) trong Django trên mọi thao tác chuyển trạng thái đơn.
+- **Backend:** Django 4.x
+- **Frontend:** HTML5, CSS3, Bootstrap, JavaScript
+- **Database:** SQL Server / MySQL
+- **Authentication:** Django Authentication
 
 ---
 
-## Xử lý lỗi thường gặp
+## Lỗi thường gặp
 
 | Lỗi | Nguyên nhân | Cách xử lý |
-| :--- | :--- | :--- |
-| **Port 8000 đã bị chiếm** | Port 8000 đang được sử dụng bởi ứng dụng khác | Chạy lại server với port khác: `python manage.py runserver 8080` |
-| **ModuleNotFoundError** | Chưa kích hoạt virtual environment hoặc chưa cài library | Chạy lệnh `env\Scripts\activate` và `pip install -r requirements.txt` |
-| **OperationalError / Migration** | Cơ sở dữ liệu SQLite chưa được đồng bộ hoặc bị lỗi schema | Chạy lệnh `python manage.py makemigrations` rồi `python manage.py migrate` |
-| **Lỗi PowerShell ExecutionPolicy** | Hệ thống chặn kích hoạt script môi trường ảo | Chạy `Set-ExecutionPolicy Unrestricted -Scope CurrentUser` trên PowerShell |
+|------|-------------|------------|
+| Không kết nối CSDL | Sai cấu hình Database | Kiểm tra `settings.py` và thông tin kết nối |
+| `ModuleNotFoundError` | Thiếu thư viện | Chạy `pip install -r requirements.txt` |
+| Migration lỗi | Chưa tạo hoặc cập nhật Database | Chạy `python manage.py makemigrations` và `python manage.py migrate` |
+| Static không hiển thị | Chưa cấu hình Static Files | Chạy `python manage.py collectstatic` |
+| Port đã được sử dụng | Server khác đang chạy | Chạy `python manage.py runserver 8001` hoặc tắt tiến trình cũ |
 
 ---
 
 ## Yêu cầu hệ thống
 
-* **Python**: 3.10 trở lên
-* **Hệ điều hành**: Windows / macOS / Linux
-* **Framework & Thư viện**: `Django`, `djangorestframework`
+- **Python:** 3.11 trở lên
+- **Framework:** Django 4.x
+- **Database:** SQL Server hoặc MySQL
+- **Hệ điều hành:** Windows / Linux / macOS
+- **Trình duyệt:** Google Chrome, Microsoft Edge hoặc Firefox
