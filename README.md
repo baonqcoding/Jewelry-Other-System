@@ -1,6 +1,11 @@
+# 💎 Jewelry Production Order System
 
+Hệ thống quản lý và đặt gia công trang sức (Jewelry Production Order System) hỗ trợ kết nối và tối ưu hóa quy trình làm việc giữa Khách hàng, Nhân viên Kinh doanh, Nhân viên Thiết kế, Nhân viên Gia công và Quản trị viên.
 
-**Tính năng **
+---
+
+## ✨ Tính năng chính (Features)
+
 | Feature / Group | Tính năng | Mô tả |
 | :--- | :--- | :--- |
 | **Khách hàng (Customer)** | Xem thông tin & Tìm kiếm | Xem thông tin công ty, bộ sưu tập trang sức có sẵn và tìm kiếm sản phẩm theo tên. |
@@ -21,7 +26,9 @@
 | | Quản lý đơn hàng & Báo cáo | Phê duyệt, theo dõi, xử lý thay đổi/hủy đơn hàng; xem Dashboard thống kê và tạo báo cáo tồn kho nguyên vật liệu. |
 | | An toàn & Dữ liệu | Thực hiện sao lưu (backup) và phục hồi dữ liệu hệ thống. |
 
-**Cấu trúc dự án**
+---
+
+## 📁 Cấu trúc dự án (Project Structure)
 
 ```text
 Jewelry-Other-System/
@@ -56,4 +63,45 @@ Jewelry-Other-System/
     ├── manage.py               # Lệnh quản trị dự án Django
     └── requirements.txt        # Danh sách thư viện/gói phụ thuộc
 ```
+
+---
+
+## 🚀 Hướng dẫn cài đặt và khởi chạy dự án
+
+### Bước 1: Tạo môi trường ảo (Virtual Environment)
+Mở terminal tại thư mục gốc của dự án và chạy lệnh:
+```bash
+python -m venv env
 ```
+
+---
+
+### Bước 2: Kích hoạt môi trường ảo
+
+* **Đối với Command Prompt (CMD):**
+  ```cmd
+  env\Scripts\activate
+  ```
+
+### Bước 3: Di chuyển vào thư mục dự án
+```bash
+cd web_trangsuc
+```
+### Bước 4: Cài đặt các thư viện cần thiết
+```bash
+pip install djangorestframework
+pip install -r requirements.txt
+```
+
+### Bước 5: Khởi chạy dự án
+
+```bash
+# Áp dụng cơ sở dữ liệu
+python manage.py migrate
+
+# Khởi chạy server
+python manage.py runserver
+```
+### Hoàn thành!
+Nếu khởi chạy thành công, terminal sẽ hiển thị địa chỉ đường dẫn:
+> **URL:** [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
