@@ -1,10 +1,10 @@
-# 💎 Jewelry Production Order System
+#  Jewelry Production Order System
 
 Hệ thống quản lý và đặt gia công trang sức (Jewelry Production Order System) hỗ trợ kết nối và tối ưu hóa quy trình làm việc giữa Khách hàng, Nhân viên Kinh doanh, Nhân viên Thiết kế, Nhân viên Gia công và Quản trị viên.
 
 ---
 
-## ✨ Tính năng chính (Features)
+##  Tính năng chính (Features)
 
 | Feature / Group | Tính năng | Mô tả |
 | :--- | :--- | :--- |
@@ -28,7 +28,7 @@ Hệ thống quản lý và đặt gia công trang sức (Jewelry Production Ord
 
 ---
 
-## 📁 Cấu trúc dự án (Project Structure)
+## Cấu trúc dự án (Project Structure)
 
 ```text
 Jewelry-Other-System/
@@ -66,7 +66,7 @@ Jewelry-Other-System/
 
 ---
 
-## 🚀 Hướng dẫn cài đặt và khởi chạy dự án
+##  Hướng dẫn cài đặt và khởi chạy dự án
 
 ### Bước 1: Tạo môi trường ảo (Virtual Environment)
 Mở terminal tại thư mục gốc của dự án và chạy lệnh:
@@ -105,3 +105,45 @@ python manage.py runserver
 ### Hoàn thành!
 Nếu khởi chạy thành công, terminal sẽ hiển thị địa chỉ đường dẫn:
 > **URL:** [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+##  Kiến trúc kỹ thuật
+
+### Giao thức & Định dạng dữ liệu (Data Format & API)
+
+```text
++-------------------+------------------------------------------+
+| HTTP Request Header| JSON Payload (Order Info, Design Metadata)|
++-------------------+------------------------------------------+
+```
+
+Sử dụng **RESTful API** kết hợp **Django REST Framework (DRF)** với định dạng dữ liệu **JSON** để xử lý giao tiếp giữa giao diện người dùng và backend.
+
+### Mô hình xử lý luồng công việc (Order Workflow Lifecycle)
+
+```text
+Khách hàng (Tạo yêu cầu / Đặt hàng)
+├── Sales Staff     <- Khai báo giá, báo giá vốn & xác nhận đơn hàng
+├── Design Staff    <- Xem yêu cầu, thiết kế bản vẽ 3D & tải lên hệ thống
+├── Production Staff<- Tiếp nhận, lập kế hoạch, kiểm tra vật liệu & gia công
+└── Admin / Manager <- Giám sát tiến độ, duyệt đơn hàng & tổng hợp báo cáo
+```
+
+Dữ liệu và tính toàn vẹn của đơn hàng được đảm bảo thông qua các giao dịch **Atomic Transaction** (`@transaction.atomic`) trong Django trên mọi thao tác chuyển trạng thái đơn.
+
+---
+
+## Xử lý lỗi thường gặp
+
+| Lỗi | Nguyên nhân | Cách xử lý |
+| :--- | :--- | :--- |
+| **Port 8000 đã bị chiếm** | Port 8000 đang được sử dụng bởi ứng dụng khác | Chạy lại server với port khác: `python manage.py runserver 8080` |
+| **ModuleNotFoundError** | Chưa kích hoạt virtual environment hoặc chưa cài library | Chạy lệnh `env\Scripts\activate` và `pip install -r requirements.txt` |
+| **OperationalError / Migration** | Cơ sở dữ liệu SQLite chưa được đồng bộ hoặc bị lỗi schema | Chạy lệnh `python manage.py makemigrations` rồi `python manage.py migrate` |
+| **Lỗi PowerShell ExecutionPolicy** | Hệ thống chặn kích hoạt script môi trường ảo | Chạy `Set-ExecutionPolicy Unrestricted -Scope CurrentUser` trên PowerShell |
+
+---
+
+## Yêu cầu hệ thống
+
+* **Python**: 3.10 trở lên
+* **Hệ điều hành**: Windows / macOS / Linux
+* **Framework & Thư viện**: `Django`, `djangorestframework`
