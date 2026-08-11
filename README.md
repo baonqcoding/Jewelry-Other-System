@@ -140,7 +140,6 @@ Client (Browser)
 | `ModuleNotFoundError` | Thiếu thư viện | Chạy `pip install -r requirements.txt` |
 | Migration lỗi | Chưa tạo hoặc cập nhật Database | Chạy `python manage.py makemigrations` và `python manage.py migrate` |
 | Static không hiển thị | Chưa cấu hình Static Files | Chạy `python manage.py collectstatic` |
-| Port đã được sử dụng | Server khác đang chạy | Chạy `python manage.py runserver 8001` hoặc tắt tiến trình cũ |
 
 ---
 
