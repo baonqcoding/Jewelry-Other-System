@@ -1,0 +1,51 @@
+{
+  "info": {
+    "_postman_id": "18c43479-b8ba-43fb-9def-b64d08ef21f9",
+    "name": "Shipping Address",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "57112514",
+    "_collection_link": "https://go.postman.co/collection/44256742-18c43479-b8ba-43fb-9def-b64d08ef21f9?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "GET Shipping Address",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "GET Shipping Detail",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "POST Shipping Address",
+      "request": {
+        "method": "POST",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "PUT Shipping Address",
+      "request": {
+        "method": "PUT",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "DELETE Shipping Address",
+      "request": {
+        "method": "DELETE",
+        "header": []
+      },
+      "response": []
+    }
+  ]
+}
