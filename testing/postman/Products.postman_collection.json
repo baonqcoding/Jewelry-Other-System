@@ -1,0 +1,541 @@
+{
+  "info": {
+    "_postman_id": "8a1c35d1-e62f-46b0-a20b-c17fb1525dab",
+    "name": "Products",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "44256742",
+    "_collection_link": "https://go.postman.co/collection/44256742-8a1c35d1-e62f-46b0-a20b-c17fb1525dab?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Get Products",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response is JSON\", function () {\r",
+              "    pm.response.to.be.json;\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is less than 1000ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response is an array\", function () {\r",
+              "    const data = pm.response.json();\r",
+              "    pm.expect(data).to.be.an(\"array\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/products/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "products",
+            ""
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Get Products",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/products/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "products",
+                ""
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Date",
+              "value": "Mon, 10 Aug 2026 03:38:31 GMT"
+            },
+            {
+              "key": "Server",
+              "value": "WSGIServer/0.2 CPython/3.13.1"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Vary",
+              "value": "Accept, Cookie"
+            },
+            {
+              "key": "Allow",
+              "value": "OPTIONS, GET, POST"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Content-Length",
+              "value": "2723"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Cross-Origin-Opener-Policy",
+              "value": "same-origin"
+            }
+          ],
+          "cookie": [],
+          "body": "[\n    {\n        \"id\": 2,\n        \"name\": \"Nhẫn bạc 24\",\n        \"price\": 100000,\n        \"detail\": null,\n        \"image\": \"/images/intro_img4.png\",\n        \"category\": [\n            1,\n            2\n        ]\n    },\n    {\n        \"id\": 3,\n        \"name\": \"Vòng tay đồng\",\n        \"price\": 10000,\n        \"detail\": null,\n        \"image\": \"/images/intro_img3.png\",\n        \"category\": [\n            3\n        ]\n    },\n    {\n        \"id\": 4,\n        \"name\": \"Cúc lắc ngọc\",\n        \"price\": 50000,\n        \"detail\": \"Muối tôm có nhiều loại nhưng muối tôm Tây Ninh vốn nổi tiếng, thường được chị em phụ nữ sử dụng để chấm hoa quả.\",\n        \"image\": \"/images/intro_img2_XY1aTv0.png\",\n        \"category\": [\n            5\n        ]\n    },\n    {\n        \"id\": 5,\n        \"name\": \"Cúc lắc kim cương\",\n        \"price\": 20000,\n        \"detail\": \"Lắc chân nữ titan hoa cúc màu trắng cực sang trọng được thiết kế khá đẹp mắt với những bông hoa cúc nhỏ nhắn tinh xảo được hàn cách điệu mang lại vẻ đẹp xinh xắn, độc đáo, giúp cổ chân bạn trở nên mềm mại quyến rũ nhưng không kém phần sang trọng cùng với chất liệu titan cao cấp không đen và gỉ vĩnh viễn, rất an toàn sức khỏe. Lắc chân nữ titan hoa cúc màu trn.\",\n        \"image\": \"/images/intro_img1_BOWc2PS.png\",\n        \"category\": [\n            5\n        ]\n    },\n    {\n        \"id\": 6,\n        \"name\": \"Cúc lắc vàng\",\n        \"price\": 40000,\n        \"detail\": \"Món cóc lắc bắt nguồn từ món xoài lắc vốn nổi lên như một trào lưu của giới trẻ. Bạn có thể bắt gặp các cửa hàng di động bán xoài lắc khá đơn giản trên các đường phố ở Sài Gòn.\",\n        \"image\": \"/images/intro_img6.png\",\n        \"category\": [\n            5\n        ]\n    },\n    {\n        \"id\": 7,\n        \"name\": \"Nhẫn Postman\",\n        \"price\": 999999,\n        \"detail\": \"Được tạo bằng Postman\",\n        \"image\": null,\n        \"category\": [\n            1\n        ]\n    },\n    {\n        \"id\": 8,\n        \"name\": \"Nhẫn Postman\",\n        \"price\": 999999,\n        \"detail\": \"Được tạo bằng Postman\",\n        \"image\": null,\n        \"category\": [\n            1\n        ]\n    },\n    {\n        \"id\": 9,\n        \"name\": \"Nhẫn Postman\",\n        \"price\": 999999,\n        \"detail\": \"Được tạo bằng Postman\",\n        \"image\": null,\n        \"category\": [\n            1\n        ]\n    },\n    {\n        \"id\": 10,\n        \"name\": \"Nhẫn Postman\",\n        \"price\": 999999,\n        \"detail\": \"Được tạo bằng Postman\",\n        \"image\": null,\n        \"category\": [\n            1\n        ]\n    },\n    {\n        \"id\": 11,\n        \"name\": \"Nhẫn Postman\",\n        \"price\": 999999,\n        \"detail\": \"Được tạo bằng Postman\",\n        \"image\": null,\n        \"category\": [\n            1\n        ]\n    },\n    {\n        \"id\": 12,\n        \"name\": \"Nhẫn Postman\",\n        \"price\": 999999,\n        \"detail\": \"Được tạo bằng Postman\",\n        \"image\": null,\n        \"category\": [\n            1\n        ]\n    },\n    {\n        \"id\": 13,\n        \"name\": \"Nhẫn Postman\",\n        \"price\": 999999,\n        \"detail\": \"Được tạo bằng Postman\",\n        \"image\": null,\n        \"category\": [\n            1\n        ]\n    },\n    {\n        \"id\": 15,\n        \"name\": \"Nhẫn Kim Cương\",\n        \"price\": 1500000,\n        \"detail\": \"Sản phẩm mới\",\n        \"image\": null,\n        \"category\": [\n            1\n        ]\n    },\n    {\n        \"id\": 16,\n        \"name\": \"Nhẫn Kim Cương\",\n        \"price\": 1500000,\n        \"detail\": \"Sản phẩm mới\",\n        \"image\": null,\n        \"category\": [\n            1\n        ]\n    },\n    {\n        \"id\": 17,\n        \"name\": \"Nhẫn Kim Cương\",\n        \"price\": 1500000,\n        \"detail\": \"Sản phẩm mới\",\n        \"image\": null,\n        \"category\": [\n            1\n        ]\n    },\n    {\n        \"id\": 18,\n        \"name\": \"Nhẫn Kim Cương\",\n        \"price\": 1500000,\n        \"detail\": \"Sản phẩm mới\",\n        \"image\": null,\n        \"category\": [\n            1\n        ]\n    }\n]"
+        }
+      ]
+    },
+    {
+      "name": "Get Product Detail",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": [
+        {
+          "name": "Get Product Detail",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/products/2/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "products",
+                "2",
+                ""
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Date",
+              "value": "Mon, 10 Aug 2026 03:45:36 GMT"
+            },
+            {
+              "key": "Server",
+              "value": "WSGIServer/0.2 CPython/3.13.1"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Vary",
+              "value": "Accept, Cookie"
+            },
+            {
+              "key": "Allow",
+              "value": "DELETE, GET, PUT, OPTIONS"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Content-Length",
+              "value": "112"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Cross-Origin-Opener-Policy",
+              "value": "same-origin"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"id\": 2,\n    \"name\": \"Nhẫn bạc 24\",\n    \"price\": 100000,\n    \"detail\": null,\n    \"image\": \"/images/intro_img4.png\",\n    \"category\": [\n        1,\n        2\n    ]\n}"
+        },
+        {
+          "name": "Get Product Detail",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/products/9999999/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "products",
+                "9999999",
+                ""
+              ]
+            }
+          },
+          "status": "Not Found",
+          "code": 404,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Date",
+              "value": "Mon, 10 Aug 2026 03:50:07 GMT"
+            },
+            {
+              "key": "Server",
+              "value": "WSGIServer/0.2 CPython/3.13.1"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Vary",
+              "value": "Accept, Cookie"
+            },
+            {
+              "key": "Allow",
+              "value": "DELETE, GET, PUT, OPTIONS"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Content-Length",
+              "value": "29"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Cross-Origin-Opener-Policy",
+              "value": "same-origin"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"error\": \"Product not found\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "POST Product",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Sản phẩm Test Postman\",\r\n    \"price\": 999999,\r\n    \"detail\": \"Sản phẩm được tạo bằng Postman\",\r\n    \"category\": [1]\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/products/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "products",
+            ""
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "POST Product",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Sản phẩm Test Postman\",\r\n    \"price\": 999999,\r\n    \"detail\": \"Sản phẩm được tạo bằng Postman\",\r\n    \"category\": [1]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/products/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "products",
+                ""
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Date",
+              "value": "Mon, 10 Aug 2026 06:27:34 GMT"
+            },
+            {
+              "key": "Server",
+              "value": "WSGIServer/0.2 CPython/3.13.1"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Vary",
+              "value": "Accept, Cookie"
+            },
+            {
+              "key": "Allow",
+              "value": "OPTIONS, GET, POST"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Content-Length",
+              "value": "141"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Cross-Origin-Opener-Policy",
+              "value": "same-origin"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"id\": 19,\n    \"name\": \"Sản phẩm Test Postman\",\n    \"price\": 999999,\n    \"detail\": \"Sản phẩm được tạo bằng Postman\",\n    \"image\": null,\n    \"category\": [\n        1\n    ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "PUT Product",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Sản phẩm Test Postman Updated\",\r\n    \"price\": 888888,\r\n    \"detail\": \"Đã cập nhật bằng Postman\",\r\n    \"category\": [1]\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/products/20/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "products",
+            "20",
+            ""
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "PUT Product",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Sản phẩm Test Postman Updated\",\r\n    \"price\": 888888,\r\n    \"detail\": \"Đã cập nhật bằng Postman\",\r\n    \"category\": [1]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/products/20/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "products",
+                "20",
+                ""
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Date",
+              "value": "Mon, 10 Aug 2026 06:33:40 GMT"
+            },
+            {
+              "key": "Server",
+              "value": "WSGIServer/0.2 CPython/3.13.1"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Vary",
+              "value": "Accept, Cookie"
+            },
+            {
+              "key": "Allow",
+              "value": "DELETE, GET, PUT, OPTIONS"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "Content-Length",
+              "value": "139"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "same-origin"
+            },
+            {
+              "key": "Cross-Origin-Opener-Policy",
+              "value": "same-origin"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"id\": 20,\n    \"name\": \"Sản phẩm Test Postman Updated\",\n    \"price\": 888888,\n    \"detail\": \"Đã cập nhật bằng Postman\",\n    \"image\": null,\n    \"category\": [\n        1\n    ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "DELETE Product",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/products/20/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "products",
+            "20",
+            ""
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
