@@ -1,17 +1,23 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import IsAuthenticated
+from django.views.decorators.csrf import csrf_exempt
+
 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Product, Category, Order, OrderItem, ShippingAddress
+from .models import Product, Category, Order, OrderItem, ShippingAddress, Wishlist, Review
 from .serializers import (
     ProductSerializer,
     CategorySerializer,
     OrderSerializer,
     OrderItemSerializer,
     UserSerializer,
-    ShippingAddressSerializer
+    ShippingAddressSerializer,
+    WishlistSerializer,
+    ReviewSerializer,
 )
 
 @api_view(['GET', 'POST'])
@@ -391,3 +397,48 @@ def shipping_address_detail(request, pk):
             },
             status=status.HTTP_204_NO_CONTENT
         )
+
+
+
+
+
+@csrf_exempt
+@api_view(['GET', 'POST', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def wishlist_api(request):
+    if request.method == 'GET':
+        wishlist = Wishlist.objects.filter(customer=request.user)
+        serializer = WishlistSerializer(wishlist, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        product_id = request.data.get('product_id')
+        wishlist_item, created = Wishlist.objects.get_or_create(customer=request.user, product_id=product_id)
+        if not created:
+            return Response({'message': 'Sản phẩm đã có trong wishlist'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(WishlistSerializer(wishlist_item).data, status=status.HTTP_201_CREATED)
+
+    elif request.method == 'DELETE':
+        product_id = request.data.get('product_id')
+        Wishlist.objects.filter(customer=request.user, product_id=product_id).delete()
+        return Response({'message': 'Đã xóa khỏi wishlist'}, status=status.HTTP_200_OK)
+
+@csrf_exempt
+@api_view(['GET', 'POST'])
+def product_reviews_api(request, pk):
+    if request.method == 'GET':
+        reviews = Review.objects.filter(product_id=pk)
+        return Response(ReviewSerializer(reviews, many=True).data)
+
+    elif request.method == 'POST':
+        if not request.user.is_authenticated:
+            return Response({'error': 'Vui lòng đăng nhập'}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        data = request.data.copy()
+        data['customer'] = request.user.id
+        data['product'] = pk
+        serializer = ReviewSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

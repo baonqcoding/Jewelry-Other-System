@@ -4,7 +4,9 @@ from .models import (
     Category,
     Order,
     OrderItem,
-    ShippingAddress
+    ShippingAddress,
+    Wishlist,
+    Review,
 )
 from django.contrib.auth.models import User
 
@@ -49,3 +51,19 @@ class ShippingAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShippingAddress
         fields = "__all__"               
+
+
+class WishlistSerializer(serializers.ModelSerializer):
+    product_name = serializers.ReadOnlyField(source='product.name')
+    price = serializers.ReadOnlyField(source='product.price')
+
+    class Meta:
+        model = Wishlist
+        fields = ['id', 'customer', 'product', 'product_name', 'price', 'date_added']
+
+class ReviewSerializer(serializers.ModelSerializer):
+    username = serializers.ReadOnlyField(source='customer.username')
+
+    class Meta:
+        model = Review
+        fields = ['id', 'product', 'customer', 'username', 'rating', 'comment', 'date_added']

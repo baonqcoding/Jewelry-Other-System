@@ -72,3 +72,23 @@ class ShippingAddress(models.Model):
     def __str__(self):
         return str(self.address)
     
+
+
+class Wishlist(models.Model):
+    customer = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('customer', 'product')
+        verbose_name_plural = "Wishlists"
+
+class Review(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
+    customer = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.IntegerField(default=5)  # Từ 1 đến 5 sao
+    comment = models.TextField(blank=True, null=True)
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = "Reviews"

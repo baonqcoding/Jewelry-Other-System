@@ -1,5 +1,5 @@
 from django.urls import path # type: ignore
-from . import views
+from . import api_views, views
 
 urlpatterns = [
     path('', views.home, name='home'),  # Trang chủ
@@ -14,4 +14,6 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     path('category/', views.category, name='category'),
     path('detail/', views.detail, name='detail'),
+    path('api/products/<int:pk>/reviews/', api_views.product_reviews_api, name='product_reviews_api'),
+    path('api/wishlist/', api_views.wishlist_api, name='wishlist_api'),
 ]
