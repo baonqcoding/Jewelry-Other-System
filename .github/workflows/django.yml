@@ -15,10 +15,10 @@ jobs:
         python-version: ["3.10"]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -29,11 +29,13 @@ jobs:
 
       - name: Lint with flake8
         run: |
-          # Bỏ qua thư mục môi trường ảo (myworld, env, .venv) và migration
           flake8 . --count --exclude=myworld,env,.venv,venv,migrations --select=E9,F63,F7,F82 --show-source --statistics
 
       - name: Run Tests with Coverage
         run: |
-          cd web_trangsuc
+          # Tìm đường dẫn chứa manage.py và chạy test
+          MANAGE_PATH=$(find . -name "manage.py" -type f | head -n 1)
+          DIR_PATH=$(dirname "$MANAGE_PATH")
+          cd "$DIR_PATH"
           coverage run manage.py test
           coverage report
