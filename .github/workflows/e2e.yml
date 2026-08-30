@@ -38,11 +38,12 @@ jobs:
           MANAGE_PATH=$(find . -name "manage.py" -type f | head -n 1)
           DIR_PATH=$(dirname "$MANAGE_PATH")
 
-          # Mẹo tạo thư mục static để tránh warning Django
           mkdir -p "$DIR_PATH/static"
 
           python "$DIR_PATH/manage.py" migrate
           python "$DIR_PATH/manage.py" runserver 8000 &
 
           npx wait-on http://127.0.0.1:8000 --timeout 30000
-          npx codeceptjs run --steps
+
+          # Chạy test E2E ép buộc headless mode
+          CI=true npx codeceptjs run --steps

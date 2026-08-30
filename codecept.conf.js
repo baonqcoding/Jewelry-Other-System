@@ -6,7 +6,7 @@ export const config = {
     Playwright: {
       browser: "chromium",
       url: "http://localhost:8000",
-      show: true,
+      show: false,
     },
   },
   include: {
