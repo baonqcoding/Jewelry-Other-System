@@ -35,14 +35,14 @@ jobs:
 
       - name: Run Django Server & Execute E2E Tests
         run: |
-          # Tìm thư mục chứa manage.py và khởi chạy server
           MANAGE_PATH=$(find . -name "manage.py" -type f | head -n 1)
           DIR_PATH=$(dirname "$MANAGE_PATH")
+
+          # Mẹo tạo thư mục static để tránh warning Django
+          mkdir -p "$DIR_PATH/static"
+
           python "$DIR_PATH/manage.py" migrate
           python "$DIR_PATH/manage.py" runserver 8000 &
 
-          # Đợi server Django sẵn sàng
           npx wait-on http://127.0.0.1:8000 --timeout 30000
-
-          # Chạy test E2E với headless mode
           npx codeceptjs run --steps
