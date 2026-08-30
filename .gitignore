@@ -19,3 +19,8 @@ media/
 
 # Environment variables
 .env
+node_modules
+
+
+node_modules/
+output/

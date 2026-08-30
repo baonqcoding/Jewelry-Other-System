@@ -1,0 +1,16 @@
+{
+  "name": "website_django",
+  "version": "1.0.0",
+  "description": "Hệ thống quản lý và đặt gia công trang sức (Jewelry Production Order System) hỗ trợ kết nối và tối ưu hóa quy trình làm việc giữa Khách hàng, Nhân viên Kinh doanh, Nhân viên Thiết kế, Nhân viên Gia công và Quản trị viên.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "codeceptjs": "^4.1.0",
+    "playwright": "^1.62.1"
+  }
+}
