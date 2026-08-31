@@ -1,6 +1,7 @@
 from django.db import models # type: ignore
 from django.contrib.auth.models import User # type: ignore
 from django.contrib.auth.forms import UserCreationForm # type: ignore
+from django.core.validators import MinValueValidator
 
 # Create your models here.
 #change forms register django
@@ -18,7 +19,7 @@ class CreateUserForm(UserCreationForm):
 class Product(models.Model):
     category = models.ManyToManyField(Category, related_name='product')
     name = models.CharField(max_length=200, null=True)
-    price = models.IntegerField()
+    price = models.IntegerField(validators=[MinValueValidator(0)])
     detail =models.TextField(null=True, blank = True)
     # digital = models .BooleanField(default=False, null = True, blank = False)
     image = models.ImageField(null =True, blank = True)
