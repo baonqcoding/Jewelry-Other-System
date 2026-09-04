@@ -11,6 +11,9 @@
   "license": "ISC",
   "devDependencies": {
     "codeceptjs": "^4.1.0",
+    "mochawesome": "^7.1.4",
+    "mochawesome-merge": "^4.4.1",
+    "mochawesome-report-generator": "^6.3.2",
     "playwright": "^1.62.1"
   }
 }

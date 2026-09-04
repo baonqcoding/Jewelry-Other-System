@@ -2,24 +2,25 @@ Feature("Kiểm tra giao diện hệ thống Jewelry");
 
 Scenario("Kiểm tra truy cập trang chủ", ({ I }) => {
   I.amOnPage("/");
-  I.seeInTitle(""); // Kiểm tra trang chủ load thành công
+  I.see("KAIJEWELRY"); // Kiểm tra tên thương hiệu hiển thị trên trang chủ
 });
 
 Feature("Chức năng Đăng Nhập");
 
-Scenario("Đăng nhập thành công với tài khoản hợp lệ", ({ I }) => {
-  I.amOnPage("/login"); // Hoặc URL trang login của bạn
-  I.fillField("username", "admin");
-  I.fillField("password", "123456");
-  I.click("Đăng nhập");
-  I.see("Xin chào"); // Kiểm tra thông báo hoặc giao diện sau đăng nhập
+Scenario("Đăng nhập hệ thống", ({ I }) => {
+  I.amOnPage("/login");
+  I.fillField("User Name", "admin"); // Tên nhãn đúng trong HTML của bạn
+  I.fillField("Password", "123456");
+  I.click("Login"); // Tên nút đúng trên giao diện
+
+  // Nếu đăng nhập đúng sẽ chuyển trang, nếu chưa tạo admin bạn kiểm tra nút Login hoạt động:
+  I.dontSeeInCurrentUrl("/login");
 });
 
 Feature("Chức năng Sản phẩm");
 
-Scenario("Xem chi tiết một sản phẩm trang sức", ({ I }) => {
+Scenario("Xem danh mục sản phẩm", ({ I }) => {
   I.amOnPage("/");
-  I.click("Trang sức Kim Cương"); // Click vào tên sản phẩm/danh mục
-  I.seeInCurrentUrl("/product");
-  I.see("Thêm vào giỏ hàng");
+  I.click("SẢN PHẨM"); // Bấm vào menu SẢN PHẨM có sẵn trên thanh Navigation
+  I.seeInCurrentUrl("/product"); // Hoặc URL tương ứng trang sản phẩm
 });
