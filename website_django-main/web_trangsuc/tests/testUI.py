@@ -4,7 +4,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from .models import Category, Product, Order, OrderItem, ShippingAddress
+from apps.models import Category, Product, Order, OrderItem, ShippingAddress
 
 
 # ==============================================================================
