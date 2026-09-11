@@ -64,31 +64,37 @@ def category(request):
     }
     return render(request, 'category.html', context)
 def search(request):
-   if request.method == 'POST':
-      searched =request.POST['searched']
-      keys = Product.objects.filter(name__contains =searched)
-   if request.user.is_authenticated:
+    # Phải khởi tạo biến trước khi gọi request.method để tránh lỗi khi người dùng vào bằng link (GET)
+    searched = ''
+    keys = []
+    
+    if request.method == 'POST':
+        searched = request.POST.get('searched', '')
+        keys = Product.objects.filter(name__contains=searched)
+        
+    if request.user.is_authenticated:
         customer = request.user
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
         user_login = "show"
         user_not_login = "hidden"
-   else:
+    else:
         items = []
         order = {'get_cart_items': 0, 'get_cart_total': 0}
         cartItems = order['get_cart_items']
         user_login = "hidden"
         user_not_login = "show"
-   context = {
-       'items' :items, "order" : order,
-       'searched':searched ,
-       'keys':keys,
-       'cartItems':cartItems,
-       'user_login': user_login,
-       'user_not_login':user_not_login,
-        }
-   return render(request, 'search.html', context)
+        
+    context = {
+        'items' :items, "order" : order,
+        'searched':searched ,
+        'keys':keys,
+        'cartItems':cartItems,
+        'user_login': user_login,
+        'user_not_login':user_not_login,
+    }
+    return render(request, 'search.html', context)
 
 def home(request):
     if request.user.is_authenticated:
@@ -229,59 +235,48 @@ def loginPage(request):
 
     user_login = "hidden"
     user_not_login = "show"
+    # Dùng UserCreationForm theo file gốc của bạn
+    context = {'form': UserCreationForm(), 'user_login': user_login, 'user_not_login': user_not_login}
 
     if request.method == 'POST':
-        username = request.POST.get('username', '')
-        password = request.POST.get('password', '')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
             return redirect('home')  
         else:
-            err_msg = 'Tên đăng nhập hoặc mật khẩu không chính xác.'
-            messages.error(request, err_msg)
-            form = UserCreationForm() 
-            context = {
-                'form': form, 
-                'user_login': user_login, 
-                'user_not_login': user_not_login,
-                'error': err_msg,
-                'message': err_msg,
-                'msg': err_msg
-            }
+            msg = 'Tên đăng nhập hoặc mật khẩu không chính xác.'
+            messages.error(request, msg)
+            # Bắt buộc phải nhét 'error' vào context để giao diện in ra được chữ này
+            context['error'] = msg 
             return render(request, 'login.html', context)
 
-    form = UserCreationForm() 
-    context = {'form': form, 'user_login': user_login, 'user_not_login': user_not_login}
     return render(request, 'login.html', context)
 
 
 # register
 def register(request):
     if request.user.is_authenticated:
-        user_login = "show"
-        user_not_login = "hidden"
-    else:
-        user_login = "hidden"
-        user_not_login = "show"
+        return redirect('home')
 
+    user_login = "hidden"
+    user_not_login = "show"
+    # Dùng CreateUserForm theo file gốc của bạn
     form = CreateUserForm() 
+    context = {'form': form, 'user_login': user_login, 'user_not_login': user_not_login}
+
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
         
-        # Lấy mật khẩu từ form POST để kiểm tra độ dài
-        password_val = request.POST.get('password1') or request.POST.get('password') or ''
-        
-        # Bắt buộc chặn tạo user nếu mật khẩu ít hơn 8 ký tự
-        if len(password_val) < 8:
-            err_msg = 'Mật khẩu phải có ít nhất 8 ký tự.'
-            messages.error(request, err_msg)
-            context = {
-                'form': form, 
-                'user_login': user_login, 
-                'user_not_login': user_not_login,
-                'error': err_msg
-            }
+        # Bắt độ dài mật khẩu bằng mọi giá
+        pwd = request.POST.get('password') or request.POST.get('password1') or ''
+        if len(pwd) < 8:
+            msg = 'Mật khẩu phải có ít nhất 8 ký tự.'
+            messages.error(request, msg)
+            context['error'] = msg
+            context['form'] = form
+            # Return luôn để chặn lưu user vào database
             return render(request, 'register.html', context)
 
         if form.is_valid():
@@ -290,40 +285,8 @@ def register(request):
             return redirect('login')
         else:
             messages.error(request, 'There was an error with your submission.')
+            context['form'] = form
 
-    context = {'form': form, 'user_login': user_login, 'user_not_login': user_not_login}
-    return render(request, 'register.html', context)
-
-def register(request):
-    if request.user.is_authenticated:
-       user_login = "show"
-       user_not_login = "hidden"
-    else:
-       user_login = "hidden"
-       user_not_login = "show"
-    form = CreateUserForm() 
-    if request.method == 'POST':
-       form = CreateUserForm(request.POST)
-       if form.is_valid():
-          form.save()
-          messages.success(request, 'Account created successfully. Please log in.')
-          return redirect('login')
-       else:
-          messages.error(request, 'There was an error with your submission.')
-    context ={'form': form, 'user_login': user_login,'user_not_login':user_not_login}
-    # if request.method == 'POST':
-    #     username = request.POST['username']
-    #     password = request.POST['password']
-    #     password2 = request.POST['password2']
-    #     if password == password2:
-    #         if User.objects.filter(username=username).exists():
-    #             messages.error(request, 'Username already exists.')
-    #         else:
-    #             User.objects.create_user(username=username, password=password)
-    #             messages.success(request, 'Account created successfully.')
-    #             return redirect('login')
-    #     else:
-    #         messages.error(request, 'Passwords do not match.')
     return render(request, 'register.html', context)
 
 def logoutPage(request):
