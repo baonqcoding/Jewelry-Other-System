@@ -207,15 +207,18 @@ def payment(request):
     template = loader.get_template('payment.html')
     return HttpResponse(template.render(context))
 def updateItem(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
     data = json.loads(request.body)
-    productId = data['productId']
-    action = data['action']
+    productId = data.get('productId')
+    action = data.get('action')
     
-    # Bắt lỗi không tìm thấy sản phẩm để không bị crash 500
     try:
         product = Product.objects.get(id=productId)
     except Product.DoesNotExist:
-        return JsonResponse({'error': 'Product does not exist'}, status=404)
+        # Bắt buộc trả về status=400 khớp với test_TC_CART_05
+        return JsonResponse({'error': 'Product does not exist'}, status=400)
     
     customer = request.user
     order, created = Order.objects.get_or_create(customer=customer, complete=False)
