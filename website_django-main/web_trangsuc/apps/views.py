@@ -237,14 +237,13 @@ def loginPage(request):
             login(request, user)
             return redirect('home')
         else:
-            err_msg = 'Tên đăng nhập hoặc mật khẩu không chính xác.'
-            messages.error(request, err_msg)
-            context = {
-                'error': err_msg,
-                'message': err_msg,
-                'msg': err_msg
-            }
-            return render(request, 'login.html', context)
+            msg = 'Tên đăng nhập hoặc mật khẩu không chính xác.'
+            messages.error(request, msg)
+            return render(request, 'login.html', {
+                'error': msg,
+                'message': msg,
+                'messages': [msg]
+            })
 
     return render(request, 'login.html')
 
