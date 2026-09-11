@@ -10,46 +10,46 @@ from django.contrib.auth.forms import UserCreationForm # type: ignore
 
 # Create your views here.
 def detail(request):
-  if request.user.is_authenticated:
-     customer = request.user
-     order, created = Order.objects.get_or_create(customer = customer, complete = False) 
-     items = order.orderitem_set.all()
-     cartItems = order.get_cart_items
-     user_login = "show"
-     user_not_login = "hidden"
-  else:
-     items = []
-     order = {'get_cart_items' : 0 , 'get_cart_total':0}
-     cartItems = order['get_cart_items']
-     user_login = "hidden"
-     user_not_login = "show"
-  id =request.GET.get('id','')
-  products =Product.objects.filter(id = id)
-  context = {'items' :items, 
-             "order" : order, 
-             'user_login': user_login,
-             'user_not_login':user_not_login,
-             'cartItems':cartItems,
-              'products':products
-             }
-  return render(request, 'detail.html', context)
+    if request.user.is_authenticated:
+       customer = request.user
+       order, created = Order.objects.get_or_create(customer = customer, complete = False) 
+       items = order.orderitem_set.all()
+       cartItems = order.get_cart_items
+       user_login = "show"
+       user_not_login = "hidden"
+    else:
+       items = []
+       order = {'get_cart_items' : 0 , 'get_cart_total':0}
+       cartItems = order['get_cart_items']
+       user_login = "hidden"
+       user_not_login = "show"
+    id =request.GET.get('id','')
+    products =Product.objects.filter(id = id)
+    context = {'items' :items, 
+               "order" : order, 
+               'user_login': user_login,
+               'user_not_login':user_not_login,
+               'cartItems':cartItems,
+                'products':products
+               }
+    return render(request, 'detail.html', context)
 
 def category(request):
     categories = Category.objects.filter(is_sub =False)
     active_category = request.GET.get('category','')
     if request.user.is_authenticated:
-       customer = request.user
-       order, created = Order.objects.get_or_create(customer=customer, complete=False)
-       cartItems = order.get_cart_items
-       user_login = "show"
-       user_not_login = "hidden"
+        customer = request.user
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        cartItems = order.get_cart_items
+        user_login = "show"
+        user_not_login = "hidden"
     else:
-       order = {'get_cart_items' : 0 , 'get_cart_total':0}
-       cartItems = order['get_cart_items']
-       user_login = "hidden"
-       user_not_login = "show"
+        order = {'get_cart_items' : 0 , 'get_cart_total':0}
+        cartItems = order['get_cart_items']
+        user_login = "hidden"
+        user_not_login = "show"
     products = Product.objects.all()
-  
+ 
     if active_category:
         products=Product.objects.filter(category__slug = active_category)
     context = {
@@ -63,8 +63,8 @@ def category(request):
         'user_not_login':user_not_login
     }
     return render(request, 'category.html', context)
+
 def search(request):
-    # Hỗ trợ nhận từ khóa từ cả GET ('q', 'searched') lẫn POST ('searched')
     query = request.GET.get('q') or request.GET.get('searched') or request.POST.get('searched', '')
     
     if query:
@@ -76,6 +76,7 @@ def search(request):
         'searched': query,
         'keys': keys
     })
+
 def home(request):
     if request.user.is_authenticated:
         customer = request.user
@@ -126,6 +127,7 @@ def show_products(request):
         'user_not_login':user_not_login
     }
     return render(request, 'show_product.html', context)
+
 def cart(request):
   if request.user.is_authenticated:
      customer = request.user
@@ -167,6 +169,7 @@ def contact(request):
              'cartItems':cartItems,
              }
     return render(request, 'contact.html', context)
+
 def payment(request):
     if request.user.is_authenticated:
        customer = request.user
@@ -175,6 +178,7 @@ def payment(request):
        user_login = "show"
        user_not_login = "hidden"
     else:
+       order = {'get_cart_items' : 0 , 'get_cart_total':0}
        cartItems = order['get_cart_items']
        user_login = "hidden"
        user_not_login = "show"
@@ -185,22 +189,41 @@ def payment(request):
              'cartItems':cartItems,
              }
     template = loader.get_template('payment.html')
-    return HttpResponse(template.render(context))
+    return HttpResponse(template.render(context, request))
+
 def updateItem(request):
     if not request.user.is_authenticated:
         return JsonResponse({'error': 'Unauthorized'}, status=401)
 
-    data = json.loads(request.body)
-    productId = data.get('productId')
+    try:
+        data = json.loads(request.body)
+        productId = data.get('productId')
+        action = data.get('action')
+    except Exception:
+        return JsonResponse({'error': 'Invalid payload'}, status=400)
 
     try:
         product = Product.objects.get(id=productId)
     except Product.DoesNotExist:
         return JsonResponse({'error': 'Product not found'}, status=400)
 
-    # Logic cập nhật giỏ hàng tiếp theo...
+    customer = request.user
+    order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
 
+    if action == 'add':
+        orderItem.quantity = (orderItem.quantity or 0) + 1
+    elif action == 'remove':
+        orderItem.quantity = (orderItem.quantity or 1) - 1
+    else:
+        orderItem.quantity = (orderItem.quantity or 0) + 1
 
+    orderItem.save()
+
+    if orderItem.quantity <= 0:
+        orderItem.delete()
+
+    return JsonResponse('Item was added', safe=False)
 
 def loginPage(request):
     if request.user.is_authenticated:
@@ -214,12 +237,10 @@ def loginPage(request):
             login(request, user)
             return redirect('home')
         else:
-            # Sửa chính xác chuỗi thông báo test case yêu cầu (có dấu chấm ở cuối)
             messages.error(request, 'Tên đăng nhập hoặc mật khẩu không chính xác.')
             return render(request, 'login.html')
 
     return render(request, 'login.html')
-
 
 def register(request):
     if request.user.is_authenticated:
@@ -233,7 +254,6 @@ def register(request):
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
         if form.is_valid():
-            # Kiểm tra ràng buộc độ dài mật khẩu >= 8 ký tự
             password = form.cleaned_data.get('password1') or form.cleaned_data.get('password')
             if password and len(password) < 8:
                 form.add_error(None, 'Mật khẩu phải có ít nhất 8 ký tự.')
@@ -251,7 +271,6 @@ def register(request):
         'user_not_login': user_not_login
     }
     return render(request, 'register.html', context)
-
 
 def logoutPage(request):
     logout(request)
