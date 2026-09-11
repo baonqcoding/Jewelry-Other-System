@@ -1,6 +1,9 @@
 from django.db import models # type: ignore
 from django.contrib.auth.models import User # type: ignore
 from django.contrib.auth.forms import UserCreationForm # type: ignore
+from django.core.validators import MinValueValidator
+# Trong Model Product:
+price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
 
 # Create your models here.
 #change forms register django
