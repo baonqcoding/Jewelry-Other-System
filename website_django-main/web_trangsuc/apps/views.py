@@ -225,25 +225,74 @@ def updateItem(request):
 # login
 def loginPage(request):
     if request.user.is_authenticated:
-        user_login = "show"
-        user_not_login = "hidden"
         return redirect('home')
-    else:
-        user_login = "hidden"
-        user_not_login = "show"
+
+    user_login = "hidden"
+    user_not_login = "show"
+
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST.get('username', '')
+        password = request.POST.get('password', '')
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
             return redirect('home')  
         else:
-            # Đã đổi câu thông báo khớp với testUI.py
-            messages.error(request, 'Tên đăng nhập hoặc mật khẩu không chính xác.')
+            err_msg = 'Tên đăng nhập hoặc mật khẩu không chính xác.'
+            messages.error(request, err_msg)
+            form = UserCreationForm() 
+            context = {
+                'form': form, 
+                'user_login': user_login, 
+                'user_not_login': user_not_login,
+                'error': err_msg,
+                'message': err_msg,
+                'msg': err_msg
+            }
+            return render(request, 'login.html', context)
+
     form = UserCreationForm() 
     context = {'form': form, 'user_login': user_login, 'user_not_login': user_not_login}
     return render(request, 'login.html', context)
+
+
+# register
+def register(request):
+    if request.user.is_authenticated:
+        user_login = "show"
+        user_not_login = "hidden"
+    else:
+        user_login = "hidden"
+        user_not_login = "show"
+
+    form = CreateUserForm() 
+    if request.method == 'POST':
+        form = CreateUserForm(request.POST)
+        
+        # Lấy mật khẩu từ form POST để kiểm tra độ dài
+        password_val = request.POST.get('password1') or request.POST.get('password') or ''
+        
+        # Bắt buộc chặn tạo user nếu mật khẩu ít hơn 8 ký tự
+        if len(password_val) < 8:
+            err_msg = 'Mật khẩu phải có ít nhất 8 ký tự.'
+            messages.error(request, err_msg)
+            context = {
+                'form': form, 
+                'user_login': user_login, 
+                'user_not_login': user_not_login,
+                'error': err_msg
+            }
+            return render(request, 'register.html', context)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Account created successfully. Please log in.')
+            return redirect('login')
+        else:
+            messages.error(request, 'There was an error with your submission.')
+
+    context = {'form': form, 'user_login': user_login, 'user_not_login': user_not_login}
+    return render(request, 'register.html', context)
 
 def register(request):
     if request.user.is_authenticated:
