@@ -64,10 +64,18 @@ def category(request):
     }
     return render(request, 'category.html', context)
 def search(request):
-    searched = request.GET.get('q', '')
-    keys = Product.objects.filter(name__icontains=searched) if searched else []
-    return render(request, 'search.html', {'searched': searched, 'keys': keys})
+    # Hỗ trợ nhận từ khóa từ cả GET ('q', 'searched') lẫn POST ('searched')
+    query = request.GET.get('q') or request.GET.get('searched') or request.POST.get('searched', '')
+    
+    if query:
+        keys = Product.objects.filter(name__icontains=query)
+    else:
+        keys = Product.objects.none()
 
+    return render(request, 'search.html', {
+        'searched': query,
+        'keys': keys
+    })
 def home(request):
     if request.user.is_authenticated:
         customer = request.user
@@ -195,6 +203,10 @@ def updateItem(request):
 
 
 def loginPage(request):
+    # Chuyển hướng ngay nếu người dùng đã đăng nhập
+    if request.user.is_authenticated:
+        return redirect('home')
+
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -206,7 +218,6 @@ def loginPage(request):
             messages.error(request, 'Tên đăng nhập hoặc mật khẩu không đúng')
             return render(request, 'login.html')
 
-    # Trả về trang đăng nhập đối với yêu cầu GET
     return render(request, 'login.html')
 
 
