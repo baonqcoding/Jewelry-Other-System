@@ -1,0 +1,50 @@
+{
+  "info": {
+    "_postman_id": "bva-shipping-10-chars-0001",
+    "name": "BVA Shipping Address - 10 chars",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "BVA Shipping Address - 10 chars",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201 (mobile = 10 chars, valid)\", function () { pm.response.to.have.status(201); });"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"address\":\"123 Le Loi\",\"city\":\"HCM\",\"state\":\"HCM\",\"mobile\":\"0901234567\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/shipping-addresses/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "shipping-addresses",
+            ""
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
