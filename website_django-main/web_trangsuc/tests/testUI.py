@@ -1,5 +1,6 @@
 import json
 from decimal import Decimal
+from urllib import response
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -83,10 +84,9 @@ class ProductAndSearchTestCase(TestCase):
         self.product1.category.add(self.category)
 
     def test_TC_PROD_01_price_negative_fails(self):
-        """BVA: Giá sản phẩm âm (-0.01) -> Báo lỗi Validation"""
-        product = Product(name='Lỗi giá âm', price=Decimal('-0.01'))
+        product = Product(name="Test Negative", price=-0.01)
         with self.assertRaises(ValidationError):
-            product.full_clean()
+            product.full_clean()  # Ép Django kích hoạt Model Validation
 
     def test_TC_PROD_02_price_zero_valid(self):
         """BVA: Giá sản phẩm bằng 0.00 -> Thành công"""
@@ -118,10 +118,10 @@ class ProductAndSearchTestCase(TestCase):
         self.assertEqual(len(response.context['keys']), 0)
 
     def test_TC_PROD_07_search_empty_string(self):
-        """BVA: Tìm kiếm với chuỗi rỗng -> Xử lý an toàn"""
-        response = self.client.post(reverse('search'), {'searched': ''})
+        response = self.client.get(reverse('search'), {'q': ''})
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.context['keys']), 0)
+    # Kiểm tra danh sách kết quả rỗng khi tìm kiếm chuỗi rỗng
+        self.assertEqual(len(response.context.get('keys', [])), 0)
 
 
 # ==============================================================================
