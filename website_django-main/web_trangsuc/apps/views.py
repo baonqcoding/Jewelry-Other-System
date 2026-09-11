@@ -203,7 +203,6 @@ def updateItem(request):
 
 
 def loginPage(request):
-    # Chuyển hướng ngay nếu người dùng đã đăng nhập
     if request.user.is_authenticated:
         return redirect('home')
 
@@ -215,7 +214,8 @@ def loginPage(request):
             login(request, user)
             return redirect('home')
         else:
-            messages.error(request, 'Tên đăng nhập hoặc mật khẩu không đúng')
+            # Sửa chính xác chuỗi thông báo test case yêu cầu (có dấu chấm ở cuối)
+            messages.error(request, 'Tên đăng nhập hoặc mật khẩu không chính xác.')
             return render(request, 'login.html')
 
     return render(request, 'login.html')
@@ -233,9 +233,15 @@ def register(request):
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Account created successfully. Please log in.')
-            return redirect('login')
+            # Kiểm tra ràng buộc độ dài mật khẩu >= 8 ký tự
+            password = form.cleaned_data.get('password1') or form.cleaned_data.get('password')
+            if password and len(password) < 8:
+                form.add_error(None, 'Mật khẩu phải có ít nhất 8 ký tự.')
+                messages.error(request, 'There was an error with your submission.')
+            else:
+                form.save()
+                messages.success(request, 'Account created successfully. Please log in.')
+                return redirect('login')
         else:
             messages.error(request, 'There was an error with your submission.')
 
