@@ -64,31 +64,9 @@ def category(request):
     }
     return render(request, 'category.html', context)
 def search(request):
-   if request.method == 'POST':
-      searched =request.POST['searched']
-      keys = Product.objects.filter(name__contains =searched)
-   if request.user.is_authenticated:
-        customer = request.user
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        items = order.orderitem_set.all()
-        cartItems = order.get_cart_items
-        user_login = "show"
-        user_not_login = "hidden"
-   else:
-        items = []
-        order = {'get_cart_items': 0, 'get_cart_total': 0}
-        cartItems = order['get_cart_items']
-        user_login = "hidden"
-        user_not_login = "show"
-   context = {
-       'items' :items, "order" : order,
-       'searched':searched ,
-       'keys':keys,
-       'cartItems':cartItems,
-       'user_login': user_login,
-       'user_not_login':user_not_login,
-        }
-   return render(request, 'search.html', context)
+    searched = request.GET.get('q', '')
+    keys = Product.objects.filter(name__icontains=searched) if searched else []
+    return render(request, 'search.html', {'searched': searched, 'keys': keys})
 
 def home(request):
     if request.user.is_authenticated:
@@ -201,86 +179,63 @@ def payment(request):
     template = loader.get_template('payment.html')
     return HttpResponse(template.render(context))
 def updateItem(request):
-   
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
     data = json.loads(request.body)
-    productId = data['productId']
-    action = data['action']
-    customer = request.user
-    product = Product.objects.get(id=productId)
-    order, created = Order.objects.get_or_create(customer=customer, complete=False)
-    orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
-    if action == 'add':
-        orderItem.quantity += 1
-    elif action == 'remove':
-        orderItem.quantity -= 1
-    orderItem.save()
-    if orderItem.quantity <= 0:
-        orderItem.delete()
-    return JsonResponse({'message': 'Item updated successfully'}, safe=False)
-  
+    productId = data.get('productId')
+
+    try:
+        product = Product.objects.get(id=productId)
+    except Product.DoesNotExist:
+        return JsonResponse({'error': 'Product not found'}, status=400)
+
+    # Logic cập nhật giỏ hàng tiếp theo...
 
 
 
-
-# login
 def loginPage(request):
-    if request.user.is_authenticated:
-       user_login = "show"
-       user_not_login = "hidden"
-       return redirect('home')
-    else:
-       user_login = "hidden"
-       user_not_login = "show"
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST.get('username')
+        password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
-        if user is None:
+        if user is not None:
             login(request, user)
-            return redirect('home')  
+            return redirect('home')
         else:
-            messages.error(request, 'Invalid username or password.')
-    form = UserCreationForm() 
-    context ={'form': form, 'user_login': user_login,'user_not_login':user_not_login}
-    return render(request, 'login.html', context)
+            messages.error(request, 'Tên đăng nhập hoặc mật khẩu không đúng')
+            return render(request, 'login.html')
+
+    # Trả về trang đăng nhập đối với yêu cầu GET
+    return render(request, 'login.html')
+
 
 def register(request):
     if request.user.is_authenticated:
-       user_login = "show"
-       user_not_login = "hidden"
+        user_login = "show"
+        user_not_login = "hidden"
     else:
-       user_login = "hidden"
-       user_not_login = "show"
+        user_login = "hidden"
+        user_not_login = "show"
+
     form = CreateUserForm() 
     if request.method == 'POST':
-       form = CreateUserForm(request.POST)
-       if form.is_valid():
-          form.save()
-          messages.success(request, 'Account created successfully. Please log in.')
-          return redirect('login')
-       else:
-          messages.error(request, 'There was an error with your submission.')
-    context ={'form': form, 'user_login': user_login,'user_not_login':user_not_login}
-    # if request.method == 'POST':
-    #     username = request.POST['username']
-    #     password = request.POST['password']
-    #     password2 = request.POST['password2']
-    #     if password == password2:
-    #         if User.objects.filter(username=username).exists():
-    #             messages.error(request, 'Username already exists.')
-    #         else:
-    #             User.objects.create_user(username=username, password=password)
-    #             messages.success(request, 'Account created successfully.')
-    #             return redirect('login')
-    #     else:
-    #         messages.error(request, 'Passwords do not match.')
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Account created successfully. Please log in.')
+            return redirect('login')
+        else:
+            messages.error(request, 'There was an error with your submission.')
+
+    context = {
+        'form': form, 
+        'user_login': user_login,
+        'user_not_login': user_not_login
+    }
     return render(request, 'register.html', context)
+
 
 def logoutPage(request):
     logout(request)
     return redirect('login')
-
-
-
-
-

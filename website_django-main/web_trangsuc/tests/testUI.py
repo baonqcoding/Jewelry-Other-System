@@ -86,7 +86,7 @@ class ProductAndSearchTestCase(TestCase):
     def test_TC_PROD_01_price_negative_fails(self):
         product = Product(name="Test Negative", price=-0.01)
         with self.assertRaises(ValidationError):
-            product.full_clean()  # Ép Django kích hoạt Model Validation
+            product.full_clean()
 
     def test_TC_PROD_02_price_zero_valid(self):
         """BVA: Giá sản phẩm bằng 0.00 -> Thành công"""
