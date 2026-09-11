@@ -207,56 +207,55 @@ def payment(request):
     template = loader.get_template('payment.html')
     return HttpResponse(template.render(context))
 def updateItem(request):
-   
     data = json.loads(request.body)
     productId = data['productId']
     action = data['action']
+    
+    # Bắt lỗi không tìm thấy sản phẩm để không bị crash 500
+    try:
+        product = Product.objects.get(id=productId)
+    except Product.DoesNotExist:
+        return JsonResponse({'error': 'Product does not exist'}, status=404)
+    
     customer = request.user
-    product = Product.objects.get(id=productId)
     order, created = Order.objects.get_or_create(customer=customer, complete=False)
     orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
+    
     if action == 'add':
-        orderItem.quantity += 1
+        orderItem.quantity = (orderItem.quantity + 1)
     elif action == 'remove':
-        orderItem.quantity -= 1
+        orderItem.quantity = (orderItem.quantity - 1)
+        
     orderItem.save()
+    
     if orderItem.quantity <= 0:
         orderItem.delete()
-    return JsonResponse({'message': 'Item updated successfully'}, safe=False)
-  
+        
+    return JsonResponse('Item was added', safe=False)
 
 
 
-
-# login
-# HÀM LOGIN: Ép biến error vào context để vượt qua test_TC_AUTH_04
 def loginPage(request):
     if request.user.is_authenticated:
-        user_login = "show"
-        user_not_login = "hidden"
         return redirect('home')
-    else:
-        user_login = "hidden"
-        user_not_login = "show"
-        
-    form = UserCreationForm() 
-    context = {'form': form, 'user_login': user_login, 'user_not_login': user_not_login}
-    
+
+    user_login = "hidden"
+    user_not_login = "show"
+    context = {'form': UserCreationForm(), 'user_login': user_login, 'user_not_login': user_not_login}
+
     if request.method == 'POST':
-        username = request.POST.get('username', '')
-        password = request.POST.get('password', '')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
-        
         if user is not None:
             login(request, user)
             return redirect('home')  
         else:
             msg = 'Tên đăng nhập hoặc mật khẩu không chính xác.'
             messages.error(request, msg)
-            # Nhét thẳng vào context để html bắt buộc phải render ra chuỗi này
             context['error'] = msg 
             return render(request, 'login.html', context)
-            
+
     return render(request, 'login.html', context)
 
 

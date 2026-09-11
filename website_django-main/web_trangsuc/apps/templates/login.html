@@ -118,9 +118,13 @@
                     >
                     {% for message in messages%}
                     <b
-                      ><p class="text-center mt-3">User or password not correct!</p></b
+                      ><p class="text-center mt-3">{{ message }}</p></b
                     >
                     {% endfor %}
+
+                    {% if error %}
+                    <b><p class="text-center mt-3 text-danger">{{ error }}</p></b>
+                    {% endif %}
                   </div>
                   <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
                     <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp" class="img-fluid" alt="Sample image" />
