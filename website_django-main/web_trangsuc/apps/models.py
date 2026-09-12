@@ -1,7 +1,19 @@
 from django.db import models # type: ignore
 from django.contrib.auth.models import User # type: ignore
 from django.contrib.auth.forms import UserCreationForm # type: ignore
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, RegexValidator
+from django import forms # type: ignore
+
+from .auth_bounds import (
+    USERNAME_MIN_LENGTH,
+    USERNAME_MAX_LENGTH,
+    PASSWORD_MIN_LENGTH,
+    PASSWORD_MAX_LENGTH,
+    EMAIL_MIN_LENGTH,
+    EMAIL_MAX_LENGTH,
+    FIRST_NAME_MAX_LENGTH,
+    LAST_NAME_MAX_LENGTH,
+)
 
 # Create your models here.
 #change forms register django
@@ -13,6 +25,34 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 class CreateUserForm(UserCreationForm):
+    """Web register — cung boundary voi API (auth_bounds)."""
+    username = forms.CharField(
+        min_length=USERNAME_MIN_LENGTH,
+        max_length=USERNAME_MAX_LENGTH,
+        validators=[
+            RegexValidator(
+                regex=r"^[A-Za-z0-9_]+$",
+                message="Username may only contain letters, numbers, and underscore",
+            )
+        ],
+    )
+    email = forms.EmailField(
+        min_length=EMAIL_MIN_LENGTH,
+        max_length=EMAIL_MAX_LENGTH,
+    )
+    first_name = forms.CharField(required=False, max_length=FIRST_NAME_MAX_LENGTH)
+    last_name = forms.CharField(required=False, max_length=LAST_NAME_MAX_LENGTH)
+    password1 = forms.CharField(
+        min_length=PASSWORD_MIN_LENGTH,
+        max_length=PASSWORD_MAX_LENGTH,
+        widget=forms.PasswordInput,
+    )
+    password2 = forms.CharField(
+        min_length=PASSWORD_MIN_LENGTH,
+        max_length=PASSWORD_MAX_LENGTH,
+        widget=forms.PasswordInput,
+    )
+
     class Meta:
         model =User
         fields =['username', 'email','first_name', 'last_name', 'password1', 'password2']

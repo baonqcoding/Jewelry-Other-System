@@ -44,7 +44,7 @@ def load_excel_cases(path: Path | None = None, sheet: str | None = None) -> list
     cases: list[dict] = []
 
     for sheet_name in wb.sheetnames:
-        if sheet_name.upper() == "README":
+        if sheet_name.upper() in {"README", "BOUNDS"}:
             continue
         if sheet is not None and sheet_name != sheet:
             continue
@@ -59,6 +59,8 @@ def load_excel_cases(path: Path | None = None, sheet: str | None = None) -> list
             if row is None or all(c is None or str(c).strip() == "" for c in row):
                 continue
             item = {headers[i]: row[i] for i in range(len(headers)) if headers[i]}
+            if "expected_status" not in headers or item.get("expected_status") in (None, ""):
+                continue
             enabled = str(item.get("enabled", "Y")).strip().upper()
             if enabled in {"N", "NO", "0", "FALSE"}:
                 continue
