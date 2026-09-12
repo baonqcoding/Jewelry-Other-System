@@ -44,7 +44,7 @@ def load_excel_cases(path: Path | None = None, sheet: str | None = None) -> list
     cases: list[dict] = []
 
     for sheet_name in wb.sheetnames:
-        if sheet_name.upper() in {"README", "BOUNDS"}:
+        if sheet_name.upper() in {"README", "BOUNDS", "ALL_CASES"}:
             continue
         if sheet is not None and sheet_name != sheet:
             continue
@@ -246,6 +246,10 @@ def contains_expected(actual: Any, expected: Any) -> bool:
             if not any(contains_expected(act_item, exp_item) for act_item in actual):
                 return False
         return True
+
+    # DRF ValidationError thuong boc string thanh list 1 phan tu
+    if isinstance(actual, list) and not isinstance(expected, list):
+        return any(contains_expected(item, expected) for item in actual)
 
     return actual == expected
 

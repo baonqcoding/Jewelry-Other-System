@@ -74,11 +74,12 @@ class UpdateItemWhiteBoxTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFalse(OrderItem.objects.filter(product=self.product).exists())
 
-    def test_unknown_action_saves_without_change(self):
-        """action khong phai add/remove: khong doi quantity, khong xoa (qty > 0)."""
+    def test_unknown_action_returns_400(self):
+        """EP invalid: action khong thuoc {add, remove} -> 400."""
         order = make_order(self.user)
         make_order_item(order, self.product, quantity=4)
         response = self._post(self.product.id, "noop")
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("action", response.json()["error"])
         item = OrderItem.objects.get(order=order, product=self.product)
         self.assertEqual(item.quantity, 4)

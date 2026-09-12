@@ -201,12 +201,31 @@ def payment(request):
     template = loader.get_template('payment.html')
     return HttpResponse(template.render(context))
 def updateItem(request):
-   
-    data = json.loads(request.body)
-    productId = data['productId']
-    action = data['action']
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Authentication required'}, status=401)
+
+    try:
+        data = json.loads(request.body)
+    except (json.JSONDecodeError, TypeError):
+        return JsonResponse({'error': 'Invalid JSON body'}, status=400)
+
+    productId = data.get('productId')
+    action = data.get('action')
+
+    from .domain_bounds import validate_cart_action
+    action_error = validate_cart_action(action)
+    if action_error:
+        return JsonResponse({'error': action_error}, status=400)
+
+    if productId is None or productId == '':
+        return JsonResponse({'error': 'productId is required'}, status=400)
+
+    try:
+        product = Product.objects.get(id=productId)
+    except (Product.DoesNotExist, ValueError, TypeError):
+        return JsonResponse({'error': 'Product not found'}, status=404)
+
     customer = request.user
-    product = Product.objects.get(id=productId)
     order, created = Order.objects.get_or_create(customer=customer, complete=False)
     orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
     if action == 'add':
