@@ -1,2 +1,3 @@
-django
-djangorestframework
+# Install from the Django project directory:
+#   pip install -r website_django-main/web_trangsuc/requirements.txt
+-r website_django-main/web_trangsuc/requirements.txt
