@@ -19,3 +19,7 @@ media/
 
 # Environment variables
 .env
+
+# Node / CodeceptJS
+node_modules/
+output/
