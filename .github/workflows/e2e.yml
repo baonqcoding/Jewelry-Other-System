@@ -71,7 +71,13 @@ jobs:
             exit 1
           }
 
-          npx codeceptjs run --steps
+          npx codeceptjs run --steps || {
+            echo "===== Django server log ====="
+            cat django-server.log || true
+            echo "===== Codecept output dir ====="
+            ls -la output || true
+            exit 1
+          }
 
       - name: Upload Codecept output on failure
         if: failure()
