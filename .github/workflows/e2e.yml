@@ -48,7 +48,8 @@ jobs:
           python "$DIR/manage.py" migrate --noinput
           python "$DIR/manage.py" seed_e2e
 
-          python "$DIR/manage.py" runserver 127.0.0.1:8000 > django-server.log 2>&1 &
+          # --noreload avoids dual-process lock issues under Playwright
+          python "$DIR/manage.py" runserver 127.0.0.1:8000 --noreload > django-server.log 2>&1 &
           SERVER_PID=$!
 
           echo "Waiting for Django..."

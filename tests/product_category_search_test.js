@@ -21,8 +21,9 @@ Scenario('DETAIL_01 | Xem chi tiết sản phẩm', ({ I }) => {
   I.amOnPage('/product/');
   I.click(locate('.card a[href*="/detail/"]').first());
   I.seeInCurrentUrl('/detail/');
-  I.see('Nhan Bac Test');
-  I.see('Thêm vào giỏ');
+  // detail.html dùng class text-uppercase cho tên SP và nút
+  I.see('NHAN BAC TEST');
+  I.see('THÊM VÀO GIỎ');
   I.see('Quay lại');
 });
 

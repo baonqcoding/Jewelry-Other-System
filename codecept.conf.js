@@ -8,8 +8,11 @@ exports.config = {
       url: process.env.BASE_URL || 'http://127.0.0.1:8000',
       show: showBrowser,
       browser: 'chromium',
-      waitForTimeout: 15000,
-      waitForNavigation: 'load',
+      waitForTimeout: 10000,
+      // Avoid hanging on external CDN images/fonts (mdbcdn, cloudflare)
+      waitForNavigation: 'domcontentloaded',
+      getPageTimeout: 20000,
+      timeout: 20000,
       chromium: {
         args: ['--no-sandbox', '--disable-dev-shm-usage'],
       },

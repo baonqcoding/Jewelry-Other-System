@@ -23,3 +23,5 @@ media/
 # Node / CodeceptJS
 node_modules/
 output/
+.tools/
+django-server.log

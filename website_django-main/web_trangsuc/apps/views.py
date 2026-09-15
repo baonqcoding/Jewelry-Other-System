@@ -64,9 +64,11 @@ def category(request):
     }
     return render(request, 'category.html', context)
 def search(request):
+   searched = ''
+   keys = Product.objects.none()
    if request.method == 'POST':
-      searched =request.POST['searched']
-      keys = Product.objects.filter(name__contains =searched)
+      searched = request.POST.get('searched', '')
+      keys = Product.objects.filter(name__contains=searched)
    if request.user.is_authenticated:
         customer = request.user
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
@@ -189,6 +191,7 @@ def payment(request):
        user_login = "show"
        user_not_login = "hidden"
     else:
+       order = {'get_cart_items': 0, 'get_cart_total': 0}
        cartItems = order['get_cart_items']
        user_login = "hidden"
        user_not_login = "show"
