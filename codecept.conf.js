@@ -8,8 +8,11 @@ exports.config = {
       url: process.env.BASE_URL || 'http://127.0.0.1:8000',
       show: showBrowser,
       browser: 'chromium',
-      waitForTimeout: 10000,
+      waitForTimeout: 15000,
       waitForNavigation: 'load',
+      chromium: {
+        args: ['--no-sandbox', '--disable-dev-shm-usage'],
+      },
     },
   },
   include: {
