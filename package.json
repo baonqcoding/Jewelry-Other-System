@@ -8,6 +8,6 @@
   },
   "devDependencies": {
     "codeceptjs": "^3.7.3",
-    "playwright": "^1.49.0"
+    "playwright": "^1.63.0"
   }
 }
