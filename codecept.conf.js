@@ -9,7 +9,13 @@ exports.config = {
       show: showBrowser,
       browser: 'chromium',
       waitForTimeout: 10000,
-      waitForNavigation: 'load',
+      // Avoid hanging on external CDN images/fonts (mdbcdn, cloudflare)
+      waitForNavigation: 'domcontentloaded',
+      getPageTimeout: 20000,
+      timeout: 20000,
+      chromium: {
+        args: ['--no-sandbox', '--disable-dev-shm-usage'],
+      },
     },
   },
   include: {

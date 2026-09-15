@@ -115,9 +115,9 @@ STATIC_ROOT = BASE_DIR / 'productionFiles'
 
 STATIC_URL = 'static/'
 
-STATICFILES_DIRS = [BASE_DIR / "static",
-                    os.path.join(BASE_DIR,'static'),
-                    ]  
+# Only include dirs that exist (CI checkout has no empty folders from git)
+_static_candidates = [BASE_DIR / "static"]
+STATICFILES_DIRS = [p for p in _static_candidates if Path(p).is_dir()]
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 

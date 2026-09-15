@@ -7,7 +7,7 @@ Scenario('AUTH_01 | Trang đăng ký hiển thị form', ({ I }) => {
   I.seeElement('input[name="email"]');
   I.seeElement('input[name="password1"]');
   I.seeElement('input[name="password2"]');
-  I.see('Register');
+  I.seeElement(locate('button[type="submit"]').withText('Register'));
 });
 
 Scenario('AUTH_02 | Đăng ký tài khoản mới thành công', ({ I }) => {
@@ -19,7 +19,7 @@ Scenario('AUTH_02 | Đăng ký tài khoản mới thành công', ({ I }) => {
   I.fillField('input[name="last_name"]', 'Test');
   I.fillField('input[name="password1"]', 'Passw0rd!23');
   I.fillField('input[name="password2"]', 'Passw0rd!23');
-  I.click('Register');
+  I.click(locate('button[type="submit"]').withText('Register'));
   I.seeInCurrentUrl('/login');
 });
 
@@ -27,7 +27,7 @@ Scenario('AUTH_03 | Đăng nhập sai giữ nguyên /login và báo lỗi', ({ I
   I.amOnPage('/login/');
   I.fillField('input[name="username"]', 'e2e_user');
   I.fillField('input[name="password"]', 'wrong-pass');
-  I.click('button[type="submit"]');
+  I.click(locate('button[type="submit"]').withText('Login'));
   I.seeInCurrentUrl('/login');
   I.see('User or password not correct');
 });
