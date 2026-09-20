@@ -6,13 +6,13 @@ Scenario("PROD_01 | Danh sách sản phẩm", ({ I }) => {
 });
 
 Scenario("CAT_01 | Trang danh mục và lọc theo slug", ({ I }) => {
-  I.amOnPage("/category/"); // Kiểm tra header hoặc menu chính hiển thị
+  I.amOnPage("/category/");
   I.see("SẢN PHẨM");
 });
 
 Scenario("DETAIL_01 | Xem chi tiết sản phẩm", ({ I }) => {
   I.amOnPage("/product/");
-  I.see("Danh Sách Sản Phẩm"); // Nếu có sản phẩm thì click, nếu không chỉ kiểm tra trang load thành công
+  I.see("Danh Sách Sản Phẩm");
 });
 
 Scenario("SEARCH_01 | Tìm kiếm sản phẩm từ header", ({ I }) => {
