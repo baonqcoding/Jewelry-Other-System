@@ -44,7 +44,13 @@ def load_excel_cases(path: Path | None = None, sheet: str | None = None) -> list
     cases: list[dict] = []
 
     for sheet_name in wb.sheetnames:
-        if sheet_name.upper() in {"README", "BOUNDS", "ALL_CASES"}:
+        if sheet_name.upper() in {
+            "README",
+            "BOUNDS",
+            "PARTITIONS",
+            "CONDITIONS",
+            "ALL_CASES",
+        }:
             continue
         if sheet is not None and sheet_name != sheet:
             continue
@@ -68,14 +74,26 @@ def load_excel_cases(path: Path | None = None, sheet: str | None = None) -> list
             cases.append(
                 {
                     "sheet": sheet_name,
-                    "test_id": str(item.get("test_id", "")).strip(),
-                    "description": str(item.get("description") or "").strip(),
+                    "test_id": str(item.get("test_id") or item.get("test_case") or "").strip(),
+                    "description": str(
+                        item.get("description")
+                        or item.get("expected_outcome")
+                        or item.get("reason")
+                        or ""
+                    ).strip(),
                     "method": str(item.get("method") or "GET").strip().upper(),
                     "url": str(item.get("url") or "").strip(),
                     "setup": _parse_json(item.get("setup"), {}),
                     "input": _parse_json(item.get("input"), {}),
                     "expected_status": int(item.get("expected_status")),
                     "expected_result": _parse_json(item.get("expected_result"), {}),
+                    "coverage_tag": str(
+                        item.get("coverage_tag")
+                        or item.get("new_tags_covered")
+                        or ""
+                    ).strip(),
+                    "validity": str(item.get("validity") or "").strip(),
+                    "reason": str(item.get("reason") or "").strip(),
                 }
             )
     return cases
