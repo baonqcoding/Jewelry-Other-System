@@ -1,0 +1,91 @@
+name: CodeceptJS E2E Test
+
+on:
+  push:
+    branches: ["main", "thao/testing"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  e2e-test:
+    runs-on: ubuntu-latest
+    env:
+      CI: "true"
+      SHOW_BROWSER: "false"
+      BASE_URL: "http://127.0.0.1:8000"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r website_django-main/web_trangsuc/requirements.txt
+
+      - name: Install Node Dependencies & Playwright
+        run: |
+          npm install
+          npx playwright install --with-deps chromium
+
+      - name: Migrate, seed, run Django & CodeceptJS
+        working-directory: .
+        run: |
+          set -e
+          DIR=website_django-main/web_trangsuc
+          # STATICFILES_DIRS requires this path to exist (empty dirs are not in git)
+          mkdir -p "$DIR/static"
+
+          python "$DIR/manage.py" migrate --noinput
+          python "$DIR/manage.py" seed_e2e
+
+          # --noreload avoids dual-process lock issues under Playwright
+          python "$DIR/manage.py" runserver 127.0.0.1:8000 --noreload > django-server.log 2>&1 &
+          SERVER_PID=$!
+
+          echo "Waiting for Django..."
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:8000/ >/dev/null; then
+              echo "Django is up"
+              break
+            fi
+            if ! kill -0 "$SERVER_PID" 2>/dev/null; then
+              echo "Django process died"
+              cat django-server.log || true
+              exit 1
+            fi
+            sleep 2
+          done
+
+          curl -sf http://127.0.0.1:8000/ >/dev/null || {
+            echo "Server did not become ready"
+            cat django-server.log || true
+            exit 1
+          }
+
+          npx codeceptjs run --steps || {
+            echo "===== Django server log ====="
+            cat django-server.log || true
+            echo "===== Codecept output dir ====="
+            ls -la output || true
+            exit 1
+          }
+
+      - name: Upload Codecept output on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: codecept-output
+          path: |
+            output/
+            django-server.log
+          if-no-files-found: ignore

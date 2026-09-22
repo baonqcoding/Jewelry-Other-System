@@ -1,5 +1,7 @@
 #  Jewelry Production Order System
 
+> **SRS v3.0 (file Word nộp):** [`docs/SRS_Website_Ban_Trang_Suc.docx`](docs/SRS_Website_Ban_Trang_Suc.docx) — mở bằng Microsoft Word.
+
 Hệ thống quản lý và đặt gia công trang sức (Jewelry Production Order System) hỗ trợ kết nối và tối ưu hóa quy trình làm việc giữa Khách hàng, Nhân viên Kinh doanh, Nhân viên Thiết kế, Nhân viên Gia công và Quản trị viên.
 
 ---

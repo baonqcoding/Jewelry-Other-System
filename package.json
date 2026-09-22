@@ -1,0 +1,13 @@
+{
+  "name": "jewelry-other-system",
+  "version": "1.0.0",
+  "description": "CodeceptJS UI E2E for Jewelry storefront",
+  "scripts": {
+    "test:e2e": "codeceptjs run --steps",
+    "test:e2e:ci": "codeceptjs run --steps"
+  },
+  "devDependencies": {
+    "codeceptjs": "^3.7.3",
+    "playwright": "^1.63.0"
+  }
+}
